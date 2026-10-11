@@ -18,10 +18,14 @@ Get the package for your computer from [Releases](https://github.com/askrejans/x
 | --- | --- |
 | macOS universal, Apple Silicon and Intel | `Xplorers Redressed.app` |
 | Windows x64 | `Xplorers Redressed.exe` |
-| Linux x64 | `Xplorers Redressed` |
+| Linux x64, Debian/Ubuntu package | Install the `.deb`, then open Xplorers Redressed from your applications menu |
+| Linux x64, Fedora/RPM package | Install the `.rpm`, then open Xplorers Redressed from your applications menu |
+| Linux x64 portable ZIP | `Xplorers Redressed` |
 | Framework source ZIP | Build using the instructions below |
 
-Keep all accompanying files together on Windows and Linux. These are portable packages, with no installer. Linux needs a graphical desktop and Electron's required system libraries. The current release is provided as compiled, without a Developer ID/notarized macOS signature or Windows Authenticode signature.
+Keep all accompanying files together on Windows and in the Linux portable ZIP. macOS is a universal app for Apple Silicon and Intel, signed with CrowFoundry’s Developer ID Application certificate and notarized by Apple. Windows is unsigned and may show an unknown-publisher or SmartScreen warning; no paid signing service is used.
+
+Linux needs a graphical desktop and Electron’s required system libraries. Use the `.deb` on Debian/Ubuntu or the `.rpm` on Fedora and compatible RPM systems. Installation needs administrator permission; playing runs as your normal desktop user. Both installers give the sandbox helper the ownership and permissions Electron requires. The portable ZIP needs an OS that permits unprivileged user namespaces or an administrator-configured sandbox helper. The app does not disable Electron’s sandbox to work around that requirement.
 
 An internet connection is required for AsoBrain and the CheerpJ runtime CDN. First launch takes longer while the original game and runtime download.
 
@@ -77,6 +81,8 @@ npm run package:mac
 npm run package:win
 npm run package:linux
 ```
+
+The CI builds and starts the packaged launcher on native macOS, Windows, and Linux runners, checks the preload bridge and initial screen, and uploads the tested Windows and Linux packages. These are startup checks; live game compatibility still depends on AsoBrain and CheerpJ.
 
 Packaging uses the original project icon in `packaging/`. To regenerate it, install Pillow for development and run `npm run build:icons`. macOS universal packaging should run on macOS. Build outputs and local research are ignored by Git and excluded from packages. See [release verification](docs/RELEASE.md).
 

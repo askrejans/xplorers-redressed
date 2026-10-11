@@ -1,6 +1,6 @@
 {
   "name": "xplorers-redressed",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "description": "Independent Xplorers desktop compatibility framework with first-use client downloads and WebAssembly rendering",
   "license": "GPL-3.0-only",
@@ -16,9 +16,9 @@
     "test": "node --test tests/*.test.cjs",
     "build:bridge": "python3 tools/build-bridge.py",
     "build:icons": "python3 tools/build-icons.py",
-    "package:mac": "electron-packager . \"Xplorers Redressed\" --platform=darwin --arch=universal --out=releases --overwrite --asar --icon=packaging/icon.icns --ignore=\"^/(research|tools|tests|releases|README.md)(/|$)|(^|/)\\.env[^/]*$|\\.(p12|pfx|key|pem|jks|keystore)$|^/dist/assets(/|$)|^(?!/dist/bridge\\.jar$).*\\.jar$\" --app-bundle-id=com.askrejans.xplorers-redressed",
-    "package:win": "electron-packager . \"Xplorers Redressed\" --platform=win32 --arch=x64 --out=releases --overwrite --asar --icon=packaging/icon.ico --ignore=\"^/(research|tools|tests|releases|README.md)(/|$)|(^|/)\\.env[^/]*$|\\.(p12|pfx|key|pem|jks|keystore)$|^/dist/assets(/|$)|^(?!/dist/bridge\\.jar$).*\\.jar$\"",
-    "package:linux": "electron-packager . \"Xplorers Redressed\" --platform=linux --arch=x64 --out=releases --overwrite --asar --icon=packaging/icon.png --ignore=\"^/(research|tools|tests|releases|README.md)(/|$)|(^|/)\\.env[^/]*$|\\.(p12|pfx|key|pem|jks|keystore)$|^/dist/assets(/|$)|^(?!/dist/bridge\\.jar$).*\\.jar$\""
+    "package:mac": "electron-packager . \"Xplorers Redressed\" --platform=darwin --arch=universal --out=releases --overwrite --asar --icon=packaging/icon.icns --ignore=\"^/(research|tools|tests|releases|README.md)(/|$)|(^|/)\\.env[^/]*$|\\.(p12|pfx|p8|csr|key|pem|jks|keystore)$|^/dist/assets(/|$)|^(?!/dist/bridge\\.jar$).*\\.jar$\" --app-bundle-id=com.askrejans.xplorers-redressed",
+    "package:win": "electron-packager . \"Xplorers Redressed\" --platform=win32 --arch=x64 --out=releases --overwrite --asar --icon=packaging/icon.ico --ignore=\"^/(research|tools|tests|releases|README.md)(/|$)|(^|/)\\.env[^/]*$|\\.(p12|pfx|p8|csr|key|pem|jks|keystore)$|^/dist/assets(/|$)|^(?!/dist/bridge\\.jar$).*\\.jar$\"",
+    "package:linux": "electron-packager . \"Xplorers Redressed\" --platform=linux --arch=x64 --out=releases --overwrite --asar --icon=packaging/icon.png --ignore=\"^/(research|tools|tests|releases|README.md)(/|$)|(^|/)\\.env[^/]*$|\\.(p12|pfx|p8|csr|key|pem|jks|keystore)$|^/dist/assets(/|$)|^(?!/dist/bridge\\.jar$).*\\.jar$\""
   },
   "devDependencies": {
     "@electron/packager": "20.3.0",

@@ -6,6 +6,8 @@ research/
 *.class
 *.p12
 *.pfx
+*.p8
+*.csr
 *.key
 .env*
 dist/assets/

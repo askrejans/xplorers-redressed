@@ -12,7 +12,7 @@ test('release package filters exclude credentials and original archives while re
     const ignore = /--ignore="([^"]+)"/.exec(manifest.scripts[`package:${target}`])[1];
     const options = { dir: root, out: path.join(root, 'releases'), prune: false, ignore };
     const filter = userPathFilter({ ...options, ...populateIgnoredPaths(options) });
-    for (const name of ['.git/config', '.env', '.env.local', 'credentials/private.key', 'private.pem', 'signing.p12', 'signing.pfx', 'signing.jks', 'signing.keystore', 'dist/assets/original/card.gif', 'dist/xplorers-browser.jar', 'original-client.jar', 'research/original.jar', 'releases/archive.zip']) {
+    for (const name of ['.git/config', '.env', '.env.local', 'credentials/private.key', 'private.pem', 'signing.p12', 'signing.pfx', 'credentials/AuthKey_TEST.p8', 'certificates/request.csr', 'signing.jks', 'signing.keystore', 'dist/assets/original/card.gif', 'dist/xplorers-browser.jar', 'original-client.jar', 'research/original.jar', 'releases/archive.zip']) {
       assert.equal(await filter(path.join(root, name)), false, `${target}: ${name}`);
     }
     for (const name of ['main.cjs', 'preload.cjs', 'lib/client-cache.cjs', 'dist/index.html', 'dist/bridge.jar', 'dist/bridge-runtime.js', 'packaging/icon.png', 'LICENSE']) {
