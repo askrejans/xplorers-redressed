@@ -5,6 +5,14 @@ const { SITE, SocketBridge, WebsiteSession, createImportScript, createLocalServe
 const { ClientCache } = require('./lib/client-cache.cjs');
 const { prepareClient } = require('./lib/prepare-client.cjs');
 
+const smokeTest = process.argv.includes('--smoke-test');
+const smokeReport = process.argv.find(argument => argument.startsWith('--smoke-report='))?.slice('--smoke-report='.length);
+if (smokeTest) {
+  const userData = process.argv.find(argument => argument.startsWith('--smoke-user-data='))?.slice('--smoke-user-data='.length);
+  if (!userData || !smokeReport) throw new Error('Run packaged smoke tests through tools/smoke-package.cjs');
+  app.setPath('userData', userData);
+}
+
 const sockets = new SocketBridge();
 const session = new WebsiteSession();
 let window;
@@ -66,6 +74,7 @@ app.whenReady().then(async () => {
   });
   for (const name of ['open', 'read', 'write', 'close', 'available', 'addresses']) handle(`socket:${name}`, (...args) => sockets[name](...args));
   window = new BrowserWindow({
+    show: !smokeTest,
     width: 1440,
     height: 1000,
     minWidth: 960,
@@ -90,10 +99,34 @@ app.whenReady().then(async () => {
   window.on('leave-full-screen', () => window.webContents.send('desktop:fullscreen', false));
   session.on('session', value => { if (window && !window.isDestroyed()) window.webContents.send('desktop:session', value); });
   window.on('closed', () => { sockets.closeAll(); window = null; });
-  console.log(`AsoBrain local client: ${local.origin}`);
-  console.log(`Safari session import: ${local.importUrl}`);
+  if (!smokeTest) {
+    console.log(`AsoBrain local client: ${local.origin}`);
+    console.log(`Safari session import: ${local.importUrl}`);
+  }
   await window.loadURL(`${local.origin}/`);
-}).catch(error => { console.error(`AsoBrain could not start: ${error.message}`); app.quit(); });
+  if (smokeTest) {
+    const result = await window.webContents.executeJavaScript(`(async () => {
+      if (!window.desktop) throw new Error('The packaged preload bridge did not load');
+      const graphics = await window.desktop.getGraphics();
+      const session = await window.desktop.getSession();
+      if (graphics !== 'original' || session !== null) throw new Error('The isolated launcher did not initialize its default state');
+      for (const id of ['login-form', 'username', 'password', 'rooms', 'display', 'game-graphics']) {
+        if (!document.getElementById(id)) throw new Error('Missing launcher element: ' + id);
+      }
+      const status = document.getElementById('status').textContent;
+      if (/could not|error/i.test(status)) throw new Error('Launcher initialization failed: ' + status);
+      return { title: document.title, graphics, authenticated: false };
+    })()`);
+    const report = { ok: true, packaged: app.isPackaged, platform: process.platform, arch: process.arch, ...result };
+    await fs.writeFile(smokeReport, JSON.stringify(report) + '\n', 'utf8');
+    console.log(`SMOKE_TEST_OK ${JSON.stringify(report)}`);
+    app.exit(0);
+  }
+}).catch(async error => {
+  console.error(`AsoBrain could not start: ${error.message}`);
+  if (smokeTest) await fs.writeFile(smokeReport, JSON.stringify({ ok: false, error: error.message }) + '\n', 'utf8').catch(() => {});
+  app.exit(1);
+});
 
 app.on('window-all-closed', () => app.quit());
 app.on('before-quit', () => { sockets.closeAll(); local?.server.close(); });

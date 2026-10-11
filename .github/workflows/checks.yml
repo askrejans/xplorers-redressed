@@ -26,3 +26,18 @@ jobs:
       - run: npm ci
       - run: npm run build:bridge
       - run: npm test
+      - name: Package macOS universal application
+        if: runner.os == 'macOS'
+        run: npm run package:mac
+      - name: Package Windows x64 application
+        if: runner.os == 'Windows'
+        run: npm run package:win
+      - name: Package Linux x64 application
+        if: runner.os == 'Linux'
+        run: npm run package:linux
+      - name: Start the native packaged application
+        if: runner.os != 'Linux'
+        run: node tools/smoke-package.cjs
+      - name: Start the native packaged application with a virtual display
+        if: runner.os == 'Linux'
+        run: xvfb-run -a node tools/smoke-package.cjs
