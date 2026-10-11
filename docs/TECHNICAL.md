@@ -44,6 +44,8 @@ Backup ports come from the original launcher parameters. Map Editor uses `MapEdi
 
 **Original is the default.** Enhanced mode resamples eligible static source images at 4× using bicubic interpolation. Offscreen drawing uses 2× backing images while reporting original logical dimensions, allowing high DPI detail to survive buffered composition. Larger backing images increase memory use. Resampling cannot recover detail absent from the source artwork.
 
+The preparer replaces `Graphics.getClip()` with `getClipBounds()` only when the next instruction casts the result to `Rectangle`. Scaled offscreen graphics can return a `Rectangle2D` shape; the original card panels’ cast would throw before the completed board buffer reaches the screen. General shape clips retain their original behavior.
+
 A capture handler keeps native Choice dropdown clicks from reaching CheerpJ’s enclosing AWT click listener, which would otherwise move focus to a hidden text input and close the popup. It does not cancel the browser default or selection change events.
 
 Animated GIFs retain their original animated image instead of becoming cached first-frame snapshots. Live mode changes repaint windows and refresh the verified card, ocean and island caches, including narrow aliases for the obfuscated older practice client.
@@ -57,6 +59,6 @@ npm test
 npm start
 ```
 
-Only rebuilding the owned helper requires Python 3 and a JDK supporting `javac --release 8`. `tools/build-bridge.py` compiles and verifies helpers, runs `tools/VerifySmoothAssets.java` against synthetic images, then packages owned classes only. Tests cover stream boundaries, resize signals, archive preservation, bytecode parity and JVM verification. All four observed originals have passed preparation and transport bytecode verification. Live smoke testing has authenticated and loaded an original lobby; this does not establish that every mode or complete match has been played. Desktop targets are macOS universal, Windows x64 and Linux x64.
+Only rebuilding the owned helper requires Python 3 and a JDK supporting `javac --release 8`. `tools/build-bridge.py` compiles and verifies helpers, runs `tools/VerifySmoothAssets.java` against synthetic images, then packages owned classes only. Tests cover stream boundaries, resize signals, archive preservation, bytecode parity and JVM verification. An optional real CheerpJ rendering regression, `node tools/verify-awt-paint.cjs`, requires a JDK, an existing Playwright/Chromium and pngjs installation, and internet access. It uses owned fixtures to reproduce the blank board before preparation and verify map, player, and resource panels appear in Original and Enhanced modes after preparation. It needs no game archives or accounts. All four observed originals have passed preparation and transport bytecode verification. Live smoke testing has authenticated and loaded an original lobby; this does not establish that every mode or complete match has been played. Desktop targets are macOS universal, Windows x64 and Linux x64.
 
 Original downloaded clients and media remain AsoBrain/original-creator material. They are not bundled here or relicensed under the framework’s GPL license; see [LICENSING.md](../LICENSING.md).

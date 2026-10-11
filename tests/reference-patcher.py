@@ -134,6 +134,14 @@ def patch_socket_construction(original):
 
 def patch_graphics(original, component_owners=()):
     pool, pool_end = constant_pool(original)
+    calls = [call for start, length in code_blocks(original, pool, pool_end)
+             for call in instructions(original, start, length)]
+    rectangular_clips = {
+        offset for (offset, opcode), (following, next_opcode) in zip(calls, calls[1:])
+        if opcode == 0xB6 and following == offset + 3 and next_opcode == 0xC0
+        and pool[pool[u2(original, following + 1)][1]] == (1, b"java/awt/Rectangle")
+    }
+    clip_references = {u2(original, offset + 1) for offset in rectangular_clips}
     draws = {
         b"(Ljava/awt/Image;IILjava/awt/image/ImageObserver;)Z",
         b"(Ljava/awt/Image;IIIILjava/awt/image/ImageObserver;)Z",
@@ -148,11 +156,13 @@ def patch_graphics(original, component_owners=()):
         name = pool[name_and_type[1]][1]
         descriptor = pool[name_and_type[2]][1]
         if owner == b"java/awt/Toolkit" and name == b"createImage" and descriptor == b"([B)Ljava/awt/Image;":
-            methods[index] = (name, b"(Ljava/awt/Toolkit;" + descriptor[1:])
+            methods[index] = (name, b"(Ljava/awt/Toolkit;" + descriptor[1:], "graphics")
         elif owner in (b"java/awt/Graphics", b"java/awt/Graphics2D") and name == b"drawImage" and descriptor in draws:
-            methods[index] = (name, b"(Ljava/awt/Graphics;" + descriptor[1:])
+            methods[index] = (name, b"(Ljava/awt/Graphics;" + descriptor[1:], "graphics")
         elif name == b"createImage" and descriptor == b"(II)Ljava/awt/Image;" and owner in component_owners:
-            methods[index] = (name, b"(Ljava/awt/Component;" + descriptor[1:])
+            methods[index] = (name, b"(Ljava/awt/Component;" + descriptor[1:], "graphics")
+        elif owner in (b"java/awt/Graphics", b"java/awt/Graphics2D") and name == b"getClip" and descriptor == b"()Ljava/awt/Shape;" and index in clip_references:
+            methods[index] = (b"getClipBounds", b"()Ljava/awt/Rectangle;", "clip")
     if not methods:
         return original, 0
     additions, next_index = bytearray(), len(pool)
@@ -167,18 +177,25 @@ def patch_graphics(original, component_owners=()):
     def utf8(value):
         return add(1, struct.pack(">H", len(value)) + value)
 
-    helper = add(7, struct.pack(">H", utf8(b"local/asobrain/SmoothAssets")))
+    helper = None
     replacements = {}
-    for index, (name, descriptor) in methods.items():
+    for index, (name, descriptor, kind) in methods.items():
+        if kind == "graphics" and helper is None:
+            helper = add(7, struct.pack(">H", utf8(b"local/asobrain/SmoothAssets")))
         name_index, descriptor_index = utf8(name), utf8(descriptor)
         name_and_type = add(12, struct.pack(">HH", name_index, descriptor_index))
-        replacements[index] = add(10, struct.pack(">HH", helper, name_and_type))
+        owner = pool[index][1] if kind == "clip" else helper
+        replacements[index] = (add(10, struct.pack(">HH", owner, name_and_type)), kind)
     patched, changes = bytearray(original), 0
     for start, length in code_blocks(original, pool, pool_end):
         for offset, opcode in instructions(original, start, length):
             if opcode == 0xB6 and u2(original, offset + 1) in replacements:
-                patched[offset] = 0xB8  # Static helper receives the existing object as its first argument.
-                struct.pack_into(">H", patched, offset + 1, replacements[u2(original, offset + 1)])
+                replacement, kind = replacements[u2(original, offset + 1)]
+                if kind == "clip" and offset not in rectangular_clips:
+                    continue
+                if kind == "graphics":
+                    patched[offset] = 0xB8  # Static helper receives the existing object as its first argument.
+                struct.pack_into(">H", patched, offset + 1, replacement)
                 changes += 1
     if not changes:
         return original, 0

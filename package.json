@@ -1,6 +1,6 @@
 {
   "name": "xplorers-redressed",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": true,
   "description": "Independent Xplorers desktop compatibility framework with first-use client downloads and WebAssembly rendering",
   "license": "GPL-3.0-only",

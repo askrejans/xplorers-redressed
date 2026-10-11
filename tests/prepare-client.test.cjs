@@ -19,11 +19,37 @@ function ownedFixture() {
   const source = path.join(directory, 'Client.java');
   fs.writeFileSync(source, `package fixture;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.net.Socket;
 public class Client extends Canvas {
-  public static void main(String[] args) {}
   public Socket connect() throws Exception { return new Socket(); }
+  public static void main(String[] args) {
+    if (args.length == 0) return;
+    Client client = new Client();
+    BufferedImage image = new BufferedImage(80, 80, BufferedImage.TYPE_INT_ARGB);
+    Graphics2D graphics = image.createGraphics();
+    graphics.scale(2, 2);
+    graphics.setClip(3, 4, 11, 9);
+    Rectangle expected = new Rectangle(3, 4, 11, 9);
+    if (!expected.equals(client.rectangleClip(graphics)) || !expected.equals(client.rectangleClip2D(graphics)))
+      throw new AssertionError("Scaled clip coordinates changed");
+    if (client.shapeClip(graphics) instanceof Rectangle)
+      throw new AssertionError("The general Shape clip call was modified");
+    graphics.setColor(Color.RED);
+    graphics.fillRect(0, 0, 40, 40);
+    if (image.getRGB(6, 8) != Color.RED.getRGB() || image.getRGB(27, 25) != Color.RED.getRGB()
+        || image.getRGB(5, 8) != 0 || image.getRGB(28, 25) != 0)
+      throw new AssertionError("Scaled clipping pixels changed");
+    graphics.setClip(null);
+    if (client.rectangleClip(graphics) != null || client.rectangleClip2D(graphics) != null || client.shapeClip(graphics) != null)
+      throw new AssertionError("Unbounded clip behavior changed");
+    graphics.dispose();
+    System.out.println("Scaled legacy Rectangle clips preserve bounds, pixels, general Shape clips and null clips");
+  }
+  public Rectangle rectangleClip(Graphics graphics) { return (Rectangle) graphics.getClip(); }
+  public Rectangle rectangleClip2D(Graphics2D graphics) { return (Rectangle) graphics.getClip(); }
+  public Shape shapeClip(Graphics graphics) { return graphics.getClip(); }
   public Image decoded(byte[] bytes) { return Toolkit.getDefaultToolkit().createImage(bytes); }
   public Image buffer() { return createImage(23, 17); }
   public boolean draw(Graphics g, Image image, ImageObserver observer, int kind) {
@@ -54,7 +80,7 @@ test('runtime surgery matches the development Python patcher on owned bytecode w
   const { bytes, directory } = ownedFixture();
   const result = patchClass(bytes, owner => ['fixture/Client', 'java/awt/Canvas'].includes(owner));
   assert.equal(result.socketConstructions, 1);
-  assert.equal(result.graphicsCalls, 5);
+  assert.equal(result.graphicsCalls, 7);
   const python = `import importlib.util, pathlib, sys
 spec=importlib.util.spec_from_file_location('builder',sys.argv[1])
 builder=importlib.util.module_from_spec(spec)
@@ -75,7 +101,7 @@ test('first-startup preparation preserves original archive payloads and strips i
   const output = unzipSync(prepared.jar);
   assert.equal(prepared.mainClass, 'fixture.Client');
   assert.equal(prepared.stats.socketConstructions, 1);
-  assert.equal(prepared.stats.graphicsCalls, 5);
+  assert.equal(prepared.stats.graphicsCalls, 7);
   assert.deepEqual(prepared.stats.patchedClasses, ['fixture/Client.class']);
   assert.deepEqual(prepared.stats.strippedSignatures, ['META-INF/TEST.SF', 'META-INF/TEST.RSA']);
   assert.deepEqual(output['fixture/unchanged.bin'], entries['fixture/unchanged.bin']);
@@ -90,6 +116,18 @@ test('owned patched fixture passes JVM verification with only the distributable 
   fs.writeFileSync(target, prepareClient(jar).jar);
   const result = spawnSync('java', ['-Xverify:all', '-cp', [target, path.join(project, 'dist/bridge.jar')].join(path.delimiter), 'fixture.Client'], { encoding: 'utf8' });
   assert.equal(result.status, 0, result.stderr);
+});
+
+test('legacy Rectangle clip casts fail on scaled graphics until preparation preserves their logical bounds', { skip: !developmentTools }, () => {
+  const { jar, directory } = ownedFixture();
+  const original = spawnSync('java', ['-Djava.awt.headless=true', '-cp', directory, 'fixture.Client', 'clip'], { encoding: 'utf8' });
+  assert.notEqual(original.status, 0);
+  assert.match(original.stderr, /ClassCastException/);
+  const target = path.join(directory, 'clip-prepared.jar');
+  fs.writeFileSync(target, prepareClient(jar).jar);
+  const patched = spawnSync('java', ['-Djava.awt.headless=true', '-Xverify:all', '-cp', [target, path.join(project, 'dist/bridge.jar')].join(path.delimiter), 'fixture.Client', 'clip'], { encoding: 'utf8' });
+  assert.equal(patched.status, 0, patched.stderr);
+  assert.match(patched.stdout, /preserve bounds, pixels, general Shape clips and null clips/);
 });
 
 test('optional skin archives accept only image resources and never extra executable classes', { skip: !developmentTools }, () => {
