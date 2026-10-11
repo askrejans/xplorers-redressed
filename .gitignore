@@ -1,0 +1,13 @@
+node_modules/
+releases/
+research/
+*.jar
+!/dist/bridge.jar
+*.class
+*.p12
+*.pfx
+*.key
+.env*
+dist/assets/
+dist/xplorers-browser.jar
+.DS_Store

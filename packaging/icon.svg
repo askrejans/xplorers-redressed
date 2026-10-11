@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (C) 2026 Arvis Skrējāns. SPDX-License-Identifier: GPL-3.0-only -->
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">Xplorers Redressed</title>
+  <desc id="desc">An original gold exploration compass on a green hexagonal island, framed by a dark rounded square.</desc>
+  <rect x="48" y="48" width="928" height="928" rx="216" fill="#142824"/>
+  <rect x="66" y="66" width="892" height="892" rx="200" fill="#1b3430"/>
+  <polygon points="512,196 794,359 794,685 512,848 230,685 230,359" fill="#102722"/>
+  <polygon points="512,180 794,343 794,669 512,832 230,669 230,343" fill="#28765a"/>
+  <polygon points="512,180 794,343 512,506 230,343" fill="#369271"/>
+  <polygon points="512,506 794,343 794,669 512,832" fill="#205e4a"/>
+  <polygon points="512,180 794,343 794,669 512,832 230,669 230,343" fill="none" stroke="#dcc589" stroke-width="24" stroke-linejoin="round"/>
+  <polygon points="512,292 632,594 512,548 392,594" fill="#f2dfaa"/>
+  <polygon points="512,548 632,594 512,716 392,594" fill="#b8a36b"/>
+  <polygon points="512,292 512,548 392,594" fill="#dfc58b"/>
+</svg>

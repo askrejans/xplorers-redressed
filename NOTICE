@@ -1,0 +1,27 @@
+Xplorers Redressed
+Independent desktop compatibility framework
+
+All credit for Xplorers, the original game client, artwork, servers,
+and community belongs to AsoBrain and the original creators. Original
+copyright remains with AsoBrain and the respective original rights holders.
+This project is unofficial and is not endorsed by AsoBrain.
+
+Support the original project:
+http://games.asobrain.com/pages/donate.php
+
+Original AsoBrain files are not redistributed in this repository or its
+releases. They download directly from AsoBrain on first use and are
+prepared locally. This framework does not relicense those materials.
+
+New framework code, documentation, and project icon:
+Copyright (c) 2026 Arvis Skrējāns
+Licensed under GNU GPL version 3 only. See LICENSE and LICENSING.md.
+
+Powered by CheerpJ WebAssembly from Leaning Technologies:
+https://cheerpj.com/
+Runtime files load from the vendor CDN, not redistributed here.
+CheerpJ retains its own license. See https://cheerpj.com/docs/licensing
+
+Electron and fflate retain their MIT licenses and bundled notices.
+AI indexing/training opt-out is an author request, not a GPL restriction.
+See AI_TRAINING_RESTRICTION.md.

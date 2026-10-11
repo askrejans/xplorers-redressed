@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cjrtnc.leaningtech.com; style-src 'self' 'unsafe-inline' https://cjrtnc.leaningtech.com; connect-src 'self' https://cjrtnc.leaningtech.com; img-src 'self' data: blob: https://cjrtnc.leaningtech.com; font-src 'self' data: https://cjrtnc.leaningtech.com; media-src 'self' data: blob:; worker-src 'self' blob: https://cjrtnc.leaningtech.com; frame-src 'self' https://cjrtnc.leaningtech.com; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <title>Xplorers Redressed</title>
+  <style>
+    :root {color-scheme:dark;font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#101b20;color:#eef3ef;--muted:#a5b6b7;--accent:#b9dd9a}
+    * {box-sizing:border-box} body {margin:0} button,input,select {font:inherit} button {cursor:pointer} button:disabled {cursor:wait;opacity:.55}
+    button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible {outline:3px solid var(--accent);outline-offset:3px}
+    header {height:78px;padding:0 36px;border-bottom:1px solid #ffffff18;display:flex;align-items:center;justify-content:space-between;background:#142229}
+    .brand {display:flex;align-items:center;gap:13px}.mark {font-size:29px;color:var(--accent)} .brand strong {font-size:20px;letter-spacing:.02em}.brand small {display:block;color:var(--muted);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+    .support {color:#19251c;background:var(--accent);border-radius:7px;padding:8px 13px;text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap} .pill {font-size:12px;padding:5px 11px;border:1px solid #ffffff28;border-radius:30px;color:var(--muted)} .header-actions {display:flex;align-items:center;gap:14px}
+    main {max-width:1060px;margin:0 auto;padding:42px 36px 24px} .intro {display:flex;align-items:center;justify-content:space-between;gap:30px;margin-bottom:32px}
+    .eyebrow {font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:.17em} h1 {font-size:38px;font-weight:600;letter-spacing:-.04em;line-height:1.15;margin:8px 0 13px} p {color:var(--muted);margin:0 0 18px;max-width:590px}
+    .art {display:flex;gap:7px;align-items:center;padding:19px;transform:rotate(-5deg)} .art span {display:block;width:74px;height:84px;background:#b9dd9a;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)} .art span:nth-child(2) {background:#dcc582;transform:translateY(-25px)} .art span:nth-child(3) {background:#83b3b4}
+    .panels {display:grid;grid-template-columns:330px 1fr;gap:22px} .panel {border:1px solid #ffffff1c;background:#17262d;border-radius:15px;padding:24px}
+    h2 {font-size:18px;letter-spacing:-.02em;margin:0 0 7px}.hint {font-size:13px;margin-bottom:20px} label {display:block;font-size:12px;color:var(--muted);margin:13px 0 5px} input {width:100%;padding:10px 12px;border:1px solid #ffffff2a;border-radius:7px;background:#101b20;color:inherit}
+    .primary {background:var(--accent);color:#19251c;border:0;border-radius:8px;padding:12px 18px;font-weight:600} form .primary {width:100%;margin-top:19px}
+    .secondary {background:transparent;border:1px solid #ffffff30;color:inherit;border-radius:7px;padding:7px 13px}.plain {background:transparent;border:0;color:var(--muted);padding:0;text-decoration:underline;text-underline-offset:3px}
+    .user {display:flex;align-items:center;gap:13px;margin:22px 0}.avatar {width:40px;height:40px;display:grid;place-items:center;background:#b9dd9a24;color:var(--accent);border-radius:50%;font-weight:600}.user span {color:var(--muted);font-size:12px;display:block}
+    .rooms {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin-top:20px}.room {display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:12px;border:1px solid #ffffff20;border-radius:10px;padding:17px;background:#1c3037}.room strong {display:block;font-size:16px}.room span {font-size:12px;color:var(--muted)} .room button {white-space:nowrap;padding:8px 13px}.room .online {display:block;color:var(--accent);margin-top:5px}.room.closed {opacity:.6}
+    .settings {margin-top:22px;padding-top:18px;border-top:1px solid #ffffff18;display:flex;align-items:center;gap:12px;justify-content:space-between}.settings label {margin:0}.settings select, .gamebar select {background:#101b20;color:inherit;border:1px solid #ffffff28;border-radius:7px;padding:8px}
+    #status {font-size:13px;min-height:21px;margin:22px 0 0;color:var(--muted)} #status.error {color:#ffb5a7} #status.success {color:var(--accent)}
+    footer {font-size:11px;color:#829697;margin-top:26px;display:flex;justify-content:space-between;gap:15px} footer a {color:inherit}
+    [hidden] {display:none!important} #game {height:calc(100vh - 78px);display:flex;flex-direction:column} .gamebar {height:56px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 22px;border-bottom:1px solid #ffffff18;gap:16px}.gamebar .left,.gamebar .right {display:flex;align-items:center;gap:14px}.gamebar span {font-size:12px;color:var(--muted)}
+    #display {position:relative;flex:1;min-height:0;overflow:hidden;background:#101b20} #loading {position:absolute;inset:0;z-index:5;display:grid;place-content:center;text-align:center;background:#101b20f2;padding:30px} #loading p {margin-top:12px;font-size:13px} .spinner {margin:0 auto 20px;width:34px;height:34px;border:3px solid #b9dd9a30;border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}@keyframes spin {to{transform:rotate(360deg)}}
+    #display canvas {image-rendering:auto}
+    body.fullscreen:has(#game:not([hidden])) > header {display:none} body.fullscreen #game {height:100vh}
+    @media(max-width:850px) {main{padding:28px 24px}.art{display:none}.panels{grid-template-columns:1fr 1.5fr}header{padding:0 24px}h1{font-size:32px}.panel{padding:18px}}
+    @media(max-width:640px) {.panels{grid-template-columns:1fr}.intro{margin-bottom:22px}footer{display:block}.pill{display:none}}
+  </style>
+</head>
+<body class="graphics-original">
+  <header><div class="brand"><span class="mark" aria-hidden="true">⬡</span><div><strong>Xplorers Redressed</strong><small>Independent AsoBrain client</small></div></div><div class="header-actions"><a class="support" href="http://games.asobrain.com/pages/donate.php" target="_blank" rel="noreferrer">♥ Support AsoBrain</a><button class="secondary fullscreen-button" aria-pressed="false">⛶ Fullscreen</button></div></header>
+  <main id="launcher">
+    <div class="intro"><div><span class="eyebrow">Back to the island</span><h1>Your game. Your community.</h1><p>Every Xplorers mode, with the same AsoBrain account, rankings, and players.</p><p class="hint">All game credit belongs to AsoBrain. This unofficial wrapper keeps the original game usable on modern computers. <a href="http://games.asobrain.com/pages/donate.php" target="_blank" rel="noreferrer" style="color:var(--accent)">Support the original project →</a></p></div><div class="art" aria-hidden="true"><span></span><span></span><span></span></div></div>
+    <div class="panels">
+      <section class="panel"><div id="signin"><h2>Welcome back</h2><p class="hint">Sign in with your existing AsoBrain account.</p><form id="login-form"><label for="username">Username</label><input id="username" name="username" autocomplete="username" maxlength="21" required><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password" maxlength="20" required><button class="primary" type="submit" id="login-button">Sign in</button></form></div>
+        <div id="signed-in" hidden><h2>You’re signed in</h2><div class="user"><div class="avatar" id="avatar">A</div><div><strong id="account"></strong><span>Original AsoBrain account</span></div></div><p class="hint">Choose a room or open Map Editor.</p><button class="secondary" id="logout">Sign out</button></div>
+
+      </section>
+      <section class="panel"><h2>Choose your mode</h2><p class="hint" id="modes-hint">Sign in to load the current rooms and their availability.</p><div class="rooms" id="rooms"></div>
+        <div class="settings"><label for="graphics">Game graphics</label><select id="graphics"><option value="original">Original</option><option value="smooth">Enhanced</option></select></div><p class="hint" style="margin:10px 0 0">Enhanced keeps the original artwork with smoother rendering.</p>
+      </section>
+    </div>
+    <p id="status" role="status" aria-live="polite">Ready to sign in.</p>
+    <footer><span>Original game &amp; artwork © AsoBrain · <a href="http://games.asobrain.com/pages/donate.php" target="_blank" rel="noreferrer">Support AsoBrain</a></span><span>Powered by <a href="https://cheerpj.com" target="_blank" rel="noreferrer">CheerpJ</a> WebAssembly</span></footer>
+  </main>
+  <section id="game" hidden><div class="gamebar"><div class="left"><button class="secondary" id="back">← Rooms</button><strong id="room-title"></strong><span id="game-status">Loading</span></div><div class="right"><label for="game-graphics">Graphics</label><select id="game-graphics"><option value="original">Original</option><option value="smooth">Enhanced</option></select><button class="secondary fullscreen-button" aria-pressed="false">⛶ Fullscreen</button></div></div><div id="display"><div id="loading"><div class="spinner"></div><strong id="loading-title">Preparing Xplorers…</strong><p id="loading-detail">The original client is downloaded from AsoBrain on first use.</p></div></div></section>
+  <script src="bridge-runtime.js"></script>
+  <script>
+    const $ = id => document.getElementById(id);
+    // CheerpJ's AWT click handler otherwise steals focus from native Choice menus.
+    $('display').addEventListener('click',event=>{
+      if(event.target.closest('select')) event.stopPropagation();
+    },true);
+    let session = null, launching = false, runtime = null;
+    const graphics = 'original';
+    function status(message, kind='') { $('status').textContent=message; $('status').className=kind; }
+    function setGraphics(mode, persist=true) {
+      document.body.classList.remove('graphics-original','graphics-smooth'); document.body.classList.add('graphics-'+mode);
+      $('graphics').value=mode; $('game-graphics').value=mode;
+      window.asobrainSmooth=mode==='smooth';
+      if (window.setAsobrainGraphics) window.setAsobrainGraphics(window.asobrainSmooth);
+      if(persist && window.desktop) desktop.setGraphics(mode).catch(error=>status(error.message,'error'));
+    }
+    setGraphics(graphics,false);
+    function renderModes() {
+      $('rooms').replaceChildren();
+      for(const mode of session?.modes || []) {
+        const room=document.createElement('div'); room.className='room'+(mode.available?'':' closed');
+        const info=document.createElement('div');
+        const label=document.createElement('strong');label.textContent=mode.label;
+        const description=document.createElement('span');description.textContent=mode.description;
+        const online=document.createElement('span');online.className='online';online.textContent=mode.available?(Number.isInteger(mode.players)?`${mode.players} / ${mode.capacity} online`:'Open'):'Closed';
+        info.append(label,description,online);
+        const button=document.createElement('button');button.className='primary play';button.disabled=!mode.available || launching;button.textContent=mode.available?(mode.id==='mapeditor'?'Open →':'Play →'):'Closed';button.addEventListener('click',()=>play(mode.id));
+        room.append(info,button);$('rooms').append(room);
+      }
+    }
+    function acceptSession(value) {
+      session=value?.authenticated ? value : null;
+      $('signin').hidden=!!session; $('signed-in').hidden=!session;
+      $('modes-hint').textContent=session?'Current rooms and availability from AsoBrain.':'Sign in to load the current rooms and their availability.';
+      renderModes();
+      if (session) { $('account').textContent=session.username; $('avatar').textContent=$('account').textContent.slice(0,1).toUpperCase(); status('Signed in. Choose a mode to continue.','success'); }
+    }
+    $('graphics').addEventListener('change',e=>setGraphics(e.target.value));
+    $('game-graphics').addEventListener('change',e=>setGraphics(e.target.value));
+    $('login-form').addEventListener('submit',async e=>{
+      e.preventDefault(); $('login-button').disabled=true; status('Signing in to AsoBrain…');
+      try { if(!window.desktop) throw Error('Open the standalone desktop app to sign in and play.'); acceptSession(await desktop.login($('username').value,$('password').value)); $('password').value=''; }
+      catch(error) { status(error.message,'error'); } finally { $('login-button').disabled=false; }
+    });
+    $('logout').addEventListener('click',async()=>{await desktop.logout();acceptSession(null);status('Signed out.');});
+    $('back').addEventListener('click',()=>desktop.restart());
+    function fullscreen(enabled) {
+      document.body.classList.toggle('fullscreen',enabled);
+      document.querySelectorAll('.fullscreen-button').forEach(button=>{button.textContent=enabled?'⛶ Exit fullscreen':'⛶ Fullscreen';button.setAttribute('aria-pressed',String(enabled));});
+    }
+    document.querySelectorAll('.fullscreen-button').forEach(button=>button.addEventListener('click',async()=>{if(window.desktop) fullscreen(await desktop.toggleFullscreen());}));
+    function displaySize() {
+      const size={width:Math.max(320,$('display').clientWidth-4),height:Math.max(240,$('display').clientHeight-48)};
+      window.asobrainDisplaySize=size;
+      if(window.setAsobrainDisplaySize) window.setAsobrainDisplaySize(size.width,size.height);
+    }
+    new ResizeObserver(()=>{if(!$('game').hidden) displaySize();}).observe($('display'));
+    function loadRuntime() {
+      if(!runtime) runtime=new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='https://cjrtnc.leaningtech.com/4.3/loader.js';script.onload=resolve;script.onerror=()=>reject(Error('Could not download the WebAssembly runtime. Check your internet connection and retry.'));document.head.appendChild(script);}).then(()=>cheerpjInit({version:8,status:'none',natives:createAsobrainNatives(),clipboardMode:'system'}));
+      return runtime;
+    }
+    async function play(room) {
+      const mode=session?.modes.find(m=>m.id===room);
+      if(!mode?.available || launching) return; launching=true; document.querySelectorAll('.play').forEach(b=>b.disabled=true);
+      $('launcher').hidden=true; $('game').hidden=false; $('room-title').textContent=mode.label; displaySize();
+      try {
+        const prepared=await desktop.prepareMode(room);
+        $('loading-title').textContent='Loading WebAssembly runtime…';
+        await loadRuntime(); $('loading-title').textContent='Starting Xplorers…'; $('loading-detail').textContent='Connecting to the original AsoBrain servers.';
+        cheerpjCreateDisplay(-1,-1,$('display'));
+        const params={...mode.params,codebase:prepared.codebase,lobbyName:mode.label};
+        const args=Object.entries(params).map(([key,value])=>key+'='+decodeURIComponent(String(value).replace(/\+/g,' ')));
+        $('loading').hidden=true; $('game-status').textContent='Original client';
+        const code=await cheerpjRunMain('local.asobrain.Bootstrap',prepared.classpath,'--client-class='+prepared.mainClass,...args);
+        if(code!==0) throw Error('The original client stopped with code '+code+'. Return to Rooms and retry.');
+        $('game-status').textContent='Client closed';
+      } catch(error) { $('loading').hidden=false; $('loading').querySelector('.spinner').hidden=true; $('loading-title').textContent='Could not start the game'; $('loading-detail').textContent=error.message; $('game-status').textContent='Connection error'; }
+    }
+    async function init() {
+      if(!window.desktop) {status('This page is part of the standalone desktop app. Open the app to connect.');return;}
+      setGraphics(await desktop.getGraphics(),false);
+      acceptSession(await desktop.getSession()); desktop.onSession(acceptSession);
+      fullscreen(await desktop.isFullscreen()); desktop.onFullscreen(fullscreen);
+      desktop.onSetupProgress(message=>{ $('loading-detail').textContent=message; });
+    }
+    init().catch(error=>status(error.message,'error'));
+  </script>
+</body>
+</html>

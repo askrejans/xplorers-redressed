@@ -1,0 +1,13 @@
+The authors request that this repository's original framework code and
+documentation not be collected for AI indexing, embedding datasets,
+retrieval corpora, model training, fine-tuning, or automated learning
+without their prior written permission.
+
+This is an AI-use opt-out notice. It is not an amendment to GPL-3.0-only,
+does not remove rights granted by that license, and does not assert that
+model weights are automatically derivative works of this repository.
+
+Original AsoBrain materials are not distributed here and remain governed
+by their original copyright holders and applicable terms.
+
+Copyright (c) 2026 Arvis Skrējāns
