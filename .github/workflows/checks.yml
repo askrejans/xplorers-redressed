@@ -55,6 +55,7 @@ jobs:
         run: |
           sudo dpkg -r xplorers-redressed
           sudo rpm --nodeps --install releases/publish/*.rpm
+          stat -c '%U:%a %n' /opt/xplorers-redressed/chrome-sandbox
           test "$(stat -c '%U:%a' /opt/xplorers-redressed/chrome-sandbox)" = "root:4755"
           xvfb-run -a node tools/smoke-package.cjs "/opt/xplorers-redressed/Xplorers Redressed"
       - name: Archive tested Windows and Linux applications

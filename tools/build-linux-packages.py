@@ -27,10 +27,6 @@ with tempfile.TemporaryDirectory(prefix="xplorers-deb-") as temporary:
     stage.mkdir(mode=0o755)
     application = stage / "opt/xplorers-redressed"
     shutil.copytree(args.app_dir, application, symlinks=True)
-    for entry in [application, *application.rglob("*")]:
-        if not entry.is_symlink():
-            entry.chmod(0o755 if entry.is_dir() or entry.stat().st_mode & 0o111 else 0o644)
-    (application / "chrome-sandbox").chmod(0o4755)
     binary = stage / "usr/bin/xplorers-redressed"
     binary.parent.mkdir(parents=True)
     binary.symlink_to("/opt/xplorers-redressed/Xplorers Redressed")
@@ -52,9 +48,14 @@ Categories=Game;BoardGame;
     documentation.mkdir(parents=True)
     for name in ("LICENSE", "NOTICE"):
         shutil.copyfile(root / name, documentation / name)
+    for entry in [stage, *stage.rglob("*")]:
+        if not entry.is_symlink():
+            entry.chmod(0o755 if entry.is_dir() or entry.stat().st_mode & 0o111 else 0o644)
+    (application / "chrome-sandbox").chmod(0o4755)
     installed_size = sum(entry.stat().st_size for entry in stage.rglob("*") if entry.is_file() and not entry.is_symlink())
     control = stage / "DEBIAN/control"
     control.parent.mkdir()
+    control.parent.chmod(0o755)
     control.write_text(f"""Package: xplorers-redressed
 Version: {version}
 Section: games
@@ -69,6 +70,7 @@ Description: Desktop compatibility framework for AsoBrain Xplorers
  The original client is downloaded from AsoBrain on first use and is
  not included in this package. All game credit belongs to AsoBrain.
 """)
+    control.chmod(0o644)
     deb = args.output_dir / f"xplorers-redressed-{version}-linux-amd64.deb"
     subprocess.run(["dpkg-deb", "--root-owner-group", "--build", str(stage), str(deb.resolve())], check=True)
     shutil.rmtree(control.parent)
@@ -78,7 +80,9 @@ Description: Desktop compatibility framework for AsoBrain Xplorers
     with tarfile.open(rpm_root / "SOURCES/payload.tar.gz", "w:gz") as archive:
         archive.add(stage, arcname=".")
     spec = rpm_root / "SPECS/xplorers-redressed.spec"
-    spec.write_text(f"""%define __strip /bin/true
+    # This is an already built Electron payload; preserve its bytes and modes.
+    spec.write_text(f"""%define __os_install_post %{{nil}}
+%define _build_id_links none
 %define debug_package %{{nil}}
 Name: xplorers-redressed
 Version: {version}
