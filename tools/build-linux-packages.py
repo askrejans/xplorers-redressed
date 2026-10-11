@@ -79,6 +79,10 @@ Description: Desktop compatibility framework for AsoBrain Xplorers
         (rpm_root / directory).mkdir(parents=True)
     with tarfile.open(rpm_root / "SOURCES/payload.tar.gz", "w:gz") as archive:
         archive.add(stage, arcname=".")
+    rpm_application_files = "\n".join(
+        f'"/opt/xplorers-redressed/{entry.name}"'
+        for entry in sorted(application.iterdir()) if entry.name != "chrome-sandbox"
+    )
     spec = rpm_root / "SPECS/xplorers-redressed.spec"
     # This is an already built Electron payload; preserve its bytes and modes.
     spec.write_text(f"""%define __os_install_post %{{nil}}
@@ -108,7 +112,9 @@ cp -a . %{{buildroot}}/
 
 %files
 %defattr(-,root,root)
-/opt/xplorers-redressed
+%dir /opt/xplorers-redressed
+%attr(4755,root,root) /opt/xplorers-redressed/chrome-sandbox
+{rpm_application_files}
 /usr/bin/xplorers-redressed
 /usr/share/applications/xplorers-redressed.desktop
 /usr/share/pixmaps/xplorers-redressed.png
