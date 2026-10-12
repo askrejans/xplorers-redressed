@@ -23,7 +23,7 @@ Get the package for your computer from [Releases](https://github.com/askrejans/x
 | Linux x64 portable ZIP | `Xplorers Redressed` |
 | Framework source ZIP | Build using the instructions below |
 
-Keep all accompanying files together on Windows and in the Linux portable ZIP. macOS is a universal app for Apple Silicon and Intel, signed with CrowFoundry’s Developer ID Application certificate and notarized by Apple. Windows is unsigned and may show an unknown-publisher or SmartScreen warning; no paid signing service is used.
+Keep all accompanying files together on Windows and in the Linux portable ZIP. macOS is a universal app for Apple Silicon and Intel. Windows is unsigned and may show an unknown-publisher or SmartScreen warning.
 
 Linux needs a graphical desktop and Electron’s required system libraries. Use the `.deb` on Debian/Ubuntu or the `.rpm` on Fedora and compatible RPM systems. Installation needs administrator permission; playing runs as your normal desktop user. Both installers give the sandbox helper the ownership and permissions Electron requires. The portable ZIP needs an OS that permits unprivileged user namespaces or an administrator-configured sandbox helper. The app does not disable Electron’s sandbox to work around that requirement.
 
