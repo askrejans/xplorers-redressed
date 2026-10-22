@@ -1,5 +1,7 @@
 # Xplorers Redressed
 
+Builds and tests run locally; see [local validation and packaging](docs/LOCAL_VALIDATION.md). Hosted GitHub build and release workflows are removed.
+
 **[♥ Support the original AsoBrain project](http://games.asobrain.com/pages/donate.php)** · [Visit AsoBrain](http://games.asobrain.com/) · [Download desktop releases](https://github.com/askrejans/xplorers-redressed/releases/latest)
 
 All credit for Xplorers, its game rules, original client, artwork, servers, and community belongs to **AsoBrain and the original creators**. If this wrapper helps you return to the game, please support the people who made it and keep its servers running.
